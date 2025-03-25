@@ -44,6 +44,8 @@ public class OdeTimJsonTopology {
 
     if ("CONFLUENT".equals(odeKafkaProps.getKafkaType())) {
       streamsProperties.putAll(odeKafkaProps.getConfluent().buildConfluentProperties());
+    } else if ("SECURE".equals(odeKafkaProps.getKafkaType())) {
+      streamsProperties.putAll(odeKafkaProps.getSecure().buildSecureKafkaProperties());
     }
     streams = new KafkaStreams(buildTopology(topic), streamsProperties);
     streams.setStateListener((newState, oldState) ->

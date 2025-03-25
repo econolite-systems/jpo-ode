@@ -38,6 +38,9 @@ ode:
     confluent:
       password: ${CONFLUENT_SECRET}
       username: ${CONFLUENT_KEY}
+    secure:
+      key: ${KAFKA_KEY}
+      secret: ${KAFKA_SECRET}
     producer:
       type: "sync"
       acks: ${KAFKA_ACKS}

@@ -18,6 +18,7 @@ public class OdeKafkaProperties {
     private Producer producer;
     private String kafkaType = "";
     private ConfluentProperties confluent;
+    private SecureKafkaProperties secure;
 
     @Data
     public static class Producer {

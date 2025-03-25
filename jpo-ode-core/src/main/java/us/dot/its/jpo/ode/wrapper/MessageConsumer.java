@@ -93,8 +93,11 @@ public class MessageConsumer<K, V> {
         props.put("group.id", groupId);
 
         String kafkaType = System.getenv("KAFKA_TYPE");
-        if (kafkaType != null && kafkaType.equals("CONFLUENT"))
+        if (kafkaType != null && kafkaType.equals("CONFLUENT")){
             addConfluentProperties(props);
+        } else if (kafkaType != null && kafkaType.equals("SECURE")){
+            addSecureKafkaProperties(props);
+        }
         
         this.consumer = new KafkaConsumer<K, V>(props);
 
@@ -111,8 +114,12 @@ public class MessageConsumer<K, V> {
         props.put("group.id", groupId);
 
         String kafkaType = System.getenv("KAFKA_TYPE");
-        if (kafkaType != null && kafkaType.equals("CONFLUENT"))
+        
+        if (kafkaType != null && kafkaType.equals("CONFLUENT")){
             addConfluentProperties(props);
+        } else if (kafkaType != null && kafkaType.equals("SECURE")){
+            addSecureKafkaProperties(props);
+        }
         
         this.consumer = new KafkaConsumer<K, V>(props);
 
@@ -136,6 +143,29 @@ public class MessageConsumer<K, V> {
         }
         else {
             logger.error("Environment variables CONFLUENT_KEY and CONFLUENT_SECRET are not set. Set these in the .env file to use Confluent Cloud");
+        }
+
+        return props;
+    }
+    
+    private Properties addSecureKafkaProperties(Properties props) {
+        props.put("ssl.endpoint.identification.algorithm", "https");
+        props.put("security.protocol", "SASL_SSL");
+        props.put("sasl.mechanism", "SCRAM-SHA-512");
+        props.put("ssl.truststore.location", "/home/truststore/ca.p12");
+        props.put("ssl.truststore.type", "PKCS12");
+
+        String username = System.getenv("KAFKA_KEY");
+        String password = System.getenv("KAFKA_SECRET");
+
+        if (username != null && password != null) {
+            String auth = "org.apache.kafka.common.security.scram.ScramLoginModule required " +
+                "username=\"" + username + "\" " +
+                "password=\"" + password + "\";";
+            props.put("sasl.jaas.config", auth);
+        }
+        else {
+            logger.error("Environment variables KAFKA_KEY and KAFKA_SECRET are not set. Set these in the .env file to use Kafka Cloud");
         }
 
         return props;

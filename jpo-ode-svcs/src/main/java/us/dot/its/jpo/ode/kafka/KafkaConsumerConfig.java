@@ -109,6 +109,8 @@ public class KafkaConsumerConfig {
     Map<String, Object> props = new HashMap<>(kafkaProperties.buildConsumerProperties());
     if ("CONFLUENT".equals(this.odeKafkaProperties.getKafkaType())) {
       props.putAll(this.odeKafkaProperties.getConfluent().buildConfluentProperties());
+    } else if ("SECURE".equals(this.odeKafkaProperties.getKafkaType())) {
+      props.putAll(this.odeKafkaProperties.getSecure().buildSecureKafkaProperties());
     }
     return props;
   }

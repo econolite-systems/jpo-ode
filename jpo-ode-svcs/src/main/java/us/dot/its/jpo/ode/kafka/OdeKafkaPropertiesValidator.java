@@ -7,7 +7,7 @@ import java.util.List;
 public class OdeKafkaPropertiesValidator implements Validator {
 
     private static final List<String> VALID_ACKS = List.of("all", "0", "1", "-1");
-    private static final List<String> VALID_KAFKA_TYPES = List.of("", "CONFLUENT");
+    private static final List<String> VALID_KAFKA_TYPES = List.of("", "CONFLUENT", "SECURE");
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -41,6 +41,16 @@ public class OdeKafkaPropertiesValidator implements Validator {
             }
             if (confluent.getUsername() == null) {
                 errors.rejectValue("confluent.username", "when kafka-type is set to CONFLUENT the username must be set");
+            }
+        }
+
+        if ("SECURE".equals(properties.getKafkaType())) {
+            SecureKafkaProperties secure = properties.getSecure();
+            if (secure.getKey() == null) {
+                errors.rejectValue("secure.key", "when kafka-type is set to SECURE the key must be set");
+            }
+            if (secure.getSecret() == null) {
+                errors.rejectValue("secure.secret", "when kafka-type is set to SECURE the secret must be set");
             }
         }
     }
