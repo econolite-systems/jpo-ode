@@ -135,3 +135,4 @@ settings.xml
 #########################
 ### jpo-cvdp ###
 ppm_data/*
+*.log
