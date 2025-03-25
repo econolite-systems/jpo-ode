@@ -25,11 +25,13 @@ import us.dot.its.jpo.ode.plugin.asn1.Asn1Object;
 /**
  * Circle.
  */
-@JsonPropertyOrder({"center", "radius", "units"})
+@JsonPropertyOrder({"position", "center", "radius", "units"})
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class Circle extends Asn1Object {
   private static final long serialVersionUID = 1L;
+  @JsonProperty("position")
+  private Position position;
 
   @JsonProperty("center")
   private Position center;
