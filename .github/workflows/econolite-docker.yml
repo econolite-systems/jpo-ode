@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: [ "econolite" ]
+  pull_request:
+    branches: [ "econolite" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: azure/docker-login@v2
+      with:
+        login-server: cosysdev.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . --file Dockerfile -t cosysdev.azurecr.io/jpo-ode:1.1.${{ github.run_number }}
+        docker push cosysdev.azurecr.io/jpo-ode:1.1.${{ github.run_number }}
